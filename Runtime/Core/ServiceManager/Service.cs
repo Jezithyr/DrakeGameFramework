@@ -23,5 +23,9 @@ namespace DrakeFramework.Core
 		internal void internal_Reset(){
 			Reset();
 		}
+		~Service()
+		{
+			internal_Dispose();
+		}
     }
 }

@@ -14,6 +14,7 @@ namespace DrakeFramework{
 		public static ModInfo BaseMod => content.BaseMod;
 		public static IReadOnlyList<Service> GameServices { get => gameServiceManager.Services; } //! If this throws an error, something is very wrong
 		private static ServiceManager gameServiceManager;
+		private static ServiceManager transientServiceManager;
 		private static SessionManager sessionManager;
 		private static ModuleManager moduleManager;
 		private static ContentManager content;
@@ -28,6 +29,7 @@ namespace DrakeFramework{
 			moduleManager = new ModuleManager(); //This MUST load second
 												 //Gets all classes inheriting game server, instanstiates them and injects them into the gameService manager
 			content = new ContentManager(); //must load second
+			transientServiceManager = new ServiceManager();
 			gameServiceManager = new ServiceManager(ReflectHelper.GetSubclassesInAllAssemblies(typeof(GameService)));
 			sessionManager = new SessionManager(moduleManager);
 			ui = new UiManager(); //must load after content manager
@@ -36,6 +38,9 @@ namespace DrakeFramework{
 		internal static void Exiting()
 		{
 			gameServiceManager = null;
+			transientServiceManager = null;
+			content = null;
+			ticking = null;
 			sessionManager = null;
 			moduleManager = null;
 		}
@@ -70,6 +75,38 @@ namespace DrakeFramework{
 		public static void EndSession()
 		{
 			sessionManager.EndSession();
+		}
+		public static T CreateTransientService<T>() where T:TransientService
+		{
+			return transientServiceManager.GetService<T>();
+		}
+
+		public static void KillTransientService<T>() where T:TransientService
+		{
+			transientServiceManager.KillService(typeof(T));
+		}
+
+		public static T GetTransientService<T>() where T:TransientService
+		{
+			if (transientServiceManager.HasService(typeof(T))){
+				return transientServiceManager.GetService<T>();
+			}
+			return null;
+		}
+
+		public static bool HasTransientService<T>() where T:TransientService
+		{
+			return transientServiceManager.HasService(typeof(T));
+		}
+
+		public static bool TryGetTransientService<T>(out T service) where T:TransientService
+		{
+			if (transientServiceManager.HasService(typeof(T))){
+				service = transientServiceManager.GetService<T>();
+				return true;
+			}
+			service = null;
+			return false;
 		}
 
 		public static T GetService<T>() where T : GameService

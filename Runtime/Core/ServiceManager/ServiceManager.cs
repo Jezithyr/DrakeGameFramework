@@ -11,7 +11,7 @@ namespace DrakeFramework.Core
 		private List<Service> services = new List<Service>();
 		public IReadOnlyList<Service> Services {get => services;}
 
-		internal ServiceManager(params System.Type[] startingServiceTypes)
+		internal ServiceManager(System.Type[] startingServiceTypes)
 		{
 			foreach (var serviceType in startingServiceTypes)
 			{
@@ -29,6 +29,19 @@ namespace DrakeFramework.Core
 				serviceTypeLookup.Add(service.GetType(), service);
 				InsertServiceSorted(service);
 				TryRegisterTickingService(service);
+			}
+		}
+
+		public bool HasService(System.Type type)
+		{
+			return serviceTypeLookup.ContainsKey(type);
+		}
+
+		public void KillService(System.Type type)
+		{
+			if (serviceTypeLookup.ContainsKey(type))
+			{
+				serviceTypeLookup[type].internal_Dispose();
 			}
 		}
 
@@ -72,7 +85,7 @@ namespace DrakeFramework.Core
 			services.Clear();
 		}
 
-		private void InsertServiceSorted(Service service)
+		internal void InsertServiceSorted(Service service)
 		{
 			int index = services.FindLastIndex(e => e.Priority < service.Priority);
             	if (index == 0 || index == -1)
@@ -81,6 +94,16 @@ namespace DrakeFramework.Core
                 	return;
             	}
             	services.Insert(index + 1, service);	
+		}
+
+		internal void AddNewService<T>() where T:Service, new()
+		{
+			if (serviceTypeLookup.ContainsKey(typeof(T))) return; //don't add duplicates
+				T service = new T();
+				serviceTypeLookup.Add(service.GetType(), service);
+				InsertServiceSorted(service);
+				service.internal_Initialize();
+				TryRegisterTickingService(service);
 		}
 
 		private void TryDeRegisterTickingService(Service service)
