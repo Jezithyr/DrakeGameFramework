@@ -14,17 +14,15 @@ namespace DrakeFramework.Core
 		static void Bootstrap()
 		{
 			Debug.Log("Starting FCR");
-			Application.quitting += Game.Exiting;
-
-			//loading settings:
 			LoadBaseFrameworkSettings();
-			
+			Application.quitting += Game.Exiting;
+			//loading settings:
 			Game.Initialize();
 		}
 
 		private static void LoadBaseFrameworkSettings()
 		{
-			var settingsData = Resources.Load<ScriptableObject>("DGFSettings/DrakeFrameworkSettings");
+			var settingsData = Resources.Load<ScriptableObject>("DGFSettings/CoreSettings");
 		}
     }
 }

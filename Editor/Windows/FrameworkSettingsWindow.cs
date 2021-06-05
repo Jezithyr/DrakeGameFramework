@@ -9,7 +9,7 @@ namespace DrakeFramework.Editor
 	{
 		private const string dataRoot = "DrakeFramework";
 		private const string resourceFolder = "Resources";
-		private const string settingsFolder = "DGFSettings";
+		private const string settingsName = "CoreSettings";
 
 		private static string baseModName = "BaseMod";
 		private static string baseModTag = "BASE";
@@ -64,14 +64,10 @@ namespace DrakeFramework.Editor
 			{
 				AssetDatabase.CreateFolder("Assets/"+dataRoot, resourceFolder);
 			}
-			if (!AssetDatabase.IsValidFolder("Assets/"+dataRoot+"/"+resourceFolder+"/"+settingsFolder))
-			{
-				AssetDatabase.CreateFolder("Assets/"+dataRoot+"/"+resourceFolder, dataRoot);
-			}
 
 			settingsAsset = ScriptableObject.CreateInstance<GameSettings>();
 			settingsAsset.name = "DrakeFrameworkSettings";
-        	AssetDatabase.CreateAsset(settingsAsset, "Assets/"+dataRoot+"/"+resourceFolder+"/"+settingsFolder+".asset");
+        	AssetDatabase.CreateAsset(settingsAsset, "Assets/"+dataRoot+"/"+resourceFolder+"/DGFSettings/"+settingsName+".asset");
         	AssetDatabase.SaveAssets();
 			return settingsAsset;
 		}
