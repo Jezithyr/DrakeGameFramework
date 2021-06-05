@@ -39,21 +39,12 @@ namespace DrakeFramework.Editor
 				window.Close();
 			}
         	GUILayout.Label("Base Settings", EditorStyles.boldLabel);
-			baseModName = EditorGUILayout.TextField("BaseMod Name:", baseModName);
-			baseModTag = EditorGUILayout.TextField("BaseMod Tag:", baseModTag);
-			settings.BaseModName = baseModName;
-			settings.BaseModTag = baseModTag;
+			settings.BaseModName = EditorGUILayout.TextField("BaseMod Name:", baseModName);
+			settings.BaseModTag = EditorGUILayout.TextField("BaseMod Tag:", baseModTag);
+			baseModName = settings.BaseModName;
+			baseModTag = settings.BaseModTag;
         	//groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", groupEnabled);
         	//EditorGUILayout.EndToggleGroup();
-    	}
-
-		public override void SaveChanges()
-    	{
-        	// Your custom save procedures here
-			settings = FindOrCreateSettingsObject();
-			settings.BaseModName = baseModName;
-			settings.BaseModTag = baseModTag;
-       		base.SaveChanges();
     	}
 
 		private static DGFSettings FindOrCreateSettingsObject()
