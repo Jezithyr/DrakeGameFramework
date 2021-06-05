@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using DrakeFramework;
+using DrakeFramework.Core;
 namespace DrakeFramework.Editor
 {
 	public class FrameworkSettingsWindow : EditorWindow
 	{
+		//TODO: Rewrite this to use the settings system when that gets made
 		private const string dataRoot = "DrakeFramework";
 		private const string resourceFolder = "Resources";
 		private const string settingsName = "CoreSettings";
 
 		private static string baseModName = "BaseMod";
 		private static string baseModTag = "BASE";
-		private static GameSettings settings;
+		private static DGFSettings settings;
 
 		// Add menu named "My Window" to the Window menu
 		[MenuItem("Window/DrakeFramework/Settings")]
@@ -23,8 +25,8 @@ namespace DrakeFramework.Editor
 			FrameworkSettingsWindow window = (FrameworkSettingsWindow)EditorWindow.GetWindow(typeof(FrameworkSettingsWindow));
 			settings = FindOrCreateSettingsObject();
 			if (settings == null) return;
-			baseModName = settings.baseModName;
-			baseModTag = settings.baseModTag;
+			baseModName = settings.BaseModName;
+			baseModTag = settings.BaseModTag;
 			window.Show();
 		}
 		void OnGUI()
@@ -37,8 +39,8 @@ namespace DrakeFramework.Editor
         	GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 			baseModName = EditorGUILayout.TextField("BaseMod Name:", baseModName);
 			baseModTag = EditorGUILayout.TextField("BaseMod Tag:", baseModTag);
-			settings.baseModName = baseModName;
-			settings.baseModTag = baseModTag;
+			settings.BaseModName = baseModName;
+			settings.BaseModTag = baseModTag;
         	//groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", groupEnabled);
         	//EditorGUILayout.EndToggleGroup();
     	}
@@ -47,14 +49,14 @@ namespace DrakeFramework.Editor
     	{
         	// Your custom save procedures here
 			settings = FindOrCreateSettingsObject();
-			settings.baseModName = baseModName;
-			settings.baseModTag = baseModTag;
+			settings.BaseModName = baseModName;
+			settings.BaseModTag = baseModTag;
        		base.SaveChanges();
     	}
 
-		private static GameSettings FindOrCreateSettingsObject()
+		private static DGFSettings FindOrCreateSettingsObject()
 		{
-			GameSettings settingsAsset = (GameSettings)AssetDatabase.LoadAssetAtPath("Assets/Textures/texture.jpg", typeof(GameSettings));
+			DGFSettings settingsAsset = (DGFSettings)AssetDatabase.LoadAssetAtPath("Assets/Textures/texture.jpg", typeof(DGFSettings));
 			if (settingsAsset != null) return settingsAsset;
 			if (!AssetDatabase.IsValidFolder("Assets/"+dataRoot))
 			{
@@ -69,7 +71,7 @@ namespace DrakeFramework.Editor
 				AssetDatabase.CreateFolder("Assets/"+dataRoot+"/"+resourceFolder, "DGFSettings");
 			}
 
-			settingsAsset = ScriptableObject.CreateInstance<GameSettings>();
+			settingsAsset = ScriptableObject.CreateInstance<DGFSettings>();
 			settingsAsset.name = "DrakeFrameworkSettings";
         	AssetDatabase.CreateAsset(settingsAsset, "Assets/"+dataRoot+"/"+resourceFolder+"/DGFSettings/"+settingsName+".asset");
         	AssetDatabase.SaveAssets();

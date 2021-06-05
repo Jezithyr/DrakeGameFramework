@@ -22,7 +22,8 @@ namespace DrakeFramework.Core
 
 		private static void LoadBaseFrameworkSettings()
 		{
-			var settingsData = Resources.Load<ScriptableObject>("DGFSettings/CoreSettings");
+			var settingsData = Resources.Load<DGFSettings>("DGFSettings/CoreSettings");
+			settingsData.SetBaseModData();
 		}
     }
 }
