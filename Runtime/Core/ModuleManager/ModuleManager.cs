@@ -12,11 +12,11 @@ namespace DrakeFramework.Core
 		private List<Module> loadedModules = new List<Module>();
 		public IReadOnlyList<Module> LoadedModules {get => loadedModules;}
 
-		private Session.SessionDelegate onSessionEnd;
-		private Session.SessionDelegate onSessionStart;
+		private Session.SessionEventDelegate onSessionEnd;
+		private Session.SessionEventDelegate onSessionStart;
 		private Action  onSessionInit;
-		internal Session.SessionDelegate OnSessionEnd{get=>onSessionEnd;}
-		internal Session.SessionDelegate OnSessionStart{get=>onSessionStart;}
+		internal Session.SessionEventDelegate OnSessionEnd{get=>onSessionEnd;}
+		internal Session.SessionEventDelegate OnSessionStart{get=>onSessionStart;}
 		internal Action OnSessionInit{get=>onSessionInit;}
 
 		internal ModuleManager(){

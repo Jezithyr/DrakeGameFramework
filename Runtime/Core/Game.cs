@@ -43,6 +43,22 @@ namespace DrakeFramework{
 		{
 			Application.Quit();
 		}
+		public static void RegisterOnSessionStartEvent(Session.SessionEventDelegate callback)
+		{
+			sessionManager.RegisterOnSessionStartEvent(callback);
+		}
+		public static void DeRegisterOnSessionStartEvent(Session.SessionEventDelegate callback)
+		{
+			sessionManager.DeRegisterOnSessionStartEvent(callback);
+		}
+		public static void RegisterOnSessionEndEvent(Session.SessionEventDelegate callback)
+		{
+			sessionManager.RegisterOnSessionEndEvent(callback);
+		}
+		public static void DeRegisterOnSessionEndEvent(Session.SessionEventDelegate callback)
+		{
+			sessionManager.DeRegisterOnSessionEndEvent(callback);
+		}
 		public static void CreateSession()
 		{
 			sessionManager.CreateSession();

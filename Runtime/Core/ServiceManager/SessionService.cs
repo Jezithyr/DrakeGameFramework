@@ -9,6 +9,16 @@ namespace DrakeFramework
 	{
 		private Session session;
 		protected Session Session { get => session; }
+		protected virtual void OnSessionStart(Session session){
+		}
+		protected virtual void OnSessionEnd(Session session){
+		}
+		internal void internal_OnSessionStart(Session session){
+			OnSessionStart(session);
+		}
+		internal void internal_OnSessionEnd(Session session){
+			OnSessionEnd(session);
+		}
 		internal void SetSession(Session newSession)
 		{
 			session = newSession;

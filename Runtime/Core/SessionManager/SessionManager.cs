@@ -3,20 +3,39 @@ using UnityEngine;
 using DrakeFramework;
 namespace DrakeFramework.Core
 {
-	public class SessionManager
+	internal class SessionManager
 	{
 		internal System.Type sessionClassname = null;
 		public System.Type SessionClass { get => sessionClassname; }
 		private Session activeSession = null;
 		public Session ActiveSession { get => activeSession; }
-
 		private Action onSessionInit;
-		private Session.SessionDelegate onSessionStart;
-		private Session.SessionDelegate onSessionEnd;
+		private Session.SessionEventDelegate onSessionStart;
+		private Session.SessionEventDelegate onSessionEnd;
 		internal SessionManager(ModuleManager moduleManager)
 		{
 			onSessionInit = moduleManager.OnSessionInit;
 		}
+		internal void RegisterOnSessionStartEvent(Session.SessionEventDelegate callback)
+		{
+			onSessionStart +=callback;
+		}
+
+		internal void DeRegisterOnSessionStartEvent(Session.SessionEventDelegate callback)
+		{
+			onSessionStart -=callback;
+		}
+
+		internal void RegisterOnSessionEndEvent(Session.SessionEventDelegate callback)
+		{
+			onSessionEnd +=callback;
+		}
+
+		internal void DeRegisterOnSessionEndEvent(Session.SessionEventDelegate callback)
+		{
+			onSessionEnd -=callback;
+		}
+
 		public void CreateSession()
 		{
 			if (sessionClassname == null)
@@ -30,13 +49,20 @@ namespace DrakeFramework.Core
 		public void StartSession()
 		{
 			activeSession.internal_SessionStart();
-			onSessionStart(activeSession);
+			if (onSessionStart != null)
+			{
+				onSessionStart(activeSession);
+			}
+			
 		}
 
 		public void EndSession()
 		{
 			activeSession.internal_SessionEnd();
-			onSessionEnd(activeSession);
+			if (onSessionEnd != null)
+			{
+				onSessionEnd(activeSession);
+			}
 			activeSession = null;
 		}
 
