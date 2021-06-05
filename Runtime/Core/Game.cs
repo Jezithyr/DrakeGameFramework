@@ -4,12 +4,13 @@ using UnityEngine;
 using DrakeFramework.Core;
 
 namespace DrakeFramework{
-
 	public static partial class Game
 	{
 		//TODO: move these to a unity menu
-		public const string BaseModTag = "BASE";
-		public const string BaseModName = "BaseMod";
+		internal static string baseModTag = "BASE";
+		public static string BaseModTag => baseModTag;
+		internal static string baseModName = "BaseMod";
+		public static string BaseModName => baseModName;
 		public static ModInfo BaseMod => content.BaseMod;
 		public static IReadOnlyList<Service> GameServices { get => gameServiceManager.Services; } //! If this throws an error, something is very wrong
 		private static ServiceManager gameServiceManager;

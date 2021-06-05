@@ -36,28 +36,32 @@ namespace DrakeFramework
 			//TODO: Load last loaded mods from config
 		}
 		//get an assets location by name
-		public IResourceLocation GetAssetLocation(string assetName, string modTag = Game.BaseModTag)
+		public IResourceLocation GetAssetLocation(string assetName, string modTag = "")
 		{
+			modTag = ValidateModTag(modTag);
 			return assetRegistry[modTag + "." + assetName];
 		}
 
 		//get an asset's location by ref
-		public IResourceLocation GetAssetLocation(AssetReference assetReference, string modTag = Game.BaseModTag)
+		public IResourceLocation GetAssetLocation(AssetReference assetReference, string modTag = "")
 		{
+			modTag = ValidateModTag(modTag);
 			return GetAssetLocation(assetReference.Asset.name, modTag);
 		}
 
 		//Loads an asset by ref
-		public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReference assetRef, string modTag = Game.BaseModTag)
+		public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReference assetRef, string modTag = "")
 		{
+			modTag = ValidateModTag(modTag);
 			//not sure if this will work
 			return LoadAssetAsync<T>(assetRef, modTag);
 		}
 
 
 		//Loads an asset by name
-		public AsyncOperationHandle<T> LoadAssetAsync<T>(string assetName, string modTag = Game.BaseModTag)
+		public AsyncOperationHandle<T> LoadAssetAsync<T>(string assetName, string modTag = "")
 		{
+			modTag = ValidateModTag(modTag);
 			//not sure if this will work
 			AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(GetAssetLocation(assetName, modTag));
 			loadedAssets.Add(handle);
@@ -65,8 +69,9 @@ namespace DrakeFramework
 		}
 
 		//Initiates a tracked asset
-		public AsyncOperationHandle<GameObject> InstantiateAssetAsync(AssetReference assetRef, Vector3 position, Quaternion facing, Transform parent, string modTag = Game.BaseModTag)
+		public AsyncOperationHandle<GameObject> InstantiateAssetAsync(AssetReference assetRef, Vector3 position, Quaternion facing, Transform parent, string modTag = "")
 		{
+			modTag = ValidateModTag(modTag);
 			InstantiationParameters initParams = new InstantiationParameters(position, facing, parent);
 			AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(GetAssetLocation(assetRef, modTag), initParams);
 			loadedAssets.Add(handle);
@@ -220,6 +225,20 @@ namespace DrakeFramework
 				}
 			}
 			if (onModsLoaded != null) onModsLoaded(loadedMods);
+		}
+		internal string ValidateModTag(string modTag)
+		{
+			if (modTag == ""){
+				return Game.baseModTag;
+			}
+			return modTag;
+		}
+		internal string ValidateModName(string modName)
+		{
+			if (modName == ""){
+				return Game.baseModName;
+			}
+			return modName;
 		}
 	}
 
