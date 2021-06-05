@@ -20,8 +20,8 @@ namespace DrakeFramework.Core
    		set { baseModTag = value; }
 	}
 #endif
-		internal string baseModName = "BaseMod";
-		internal string baseModTag = "BASE";
+		[SerializeField] internal string baseModName = "BaseMod";
+		[SerializeField] internal string baseModTag = "BASE";
 		internal void SetBaseModData()
 		{
 			Game.baseModName = baseModName;

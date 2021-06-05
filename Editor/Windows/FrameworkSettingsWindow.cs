@@ -13,9 +13,9 @@ namespace DrakeFramework.Editor
 		private const string resourceFolder = "Resources";
 		private const string settingsName = "CoreSettings";
 
-		private static string baseModName = "BaseMod";
-		private static string baseModTag = "BASE";
-		private static DGFSettings settings;
+		private string baseModName = "BaseMod";
+		private string baseModTag = "BASE";
+		private DGFSettings settings;
 
 		// Add menu named "My Window" to the Window menu
 		[MenuItem("Window/DrakeFramework/Settings")]
@@ -23,11 +23,13 @@ namespace DrakeFramework.Editor
 		{
 			// Get existing open window or if none, make a new one:
 			FrameworkSettingsWindow window = (FrameworkSettingsWindow)EditorWindow.GetWindow(typeof(FrameworkSettingsWindow));
+			window.Show();
+		}
+		void Awake()
+		{
 			settings = FindOrCreateSettingsObject();
-			if (settings == null) return;
 			baseModName = settings.BaseModName;
 			baseModTag = settings.BaseModTag;
-			window.Show();
 		}
 		void OnGUI()
     	{
@@ -56,7 +58,7 @@ namespace DrakeFramework.Editor
 
 		private static DGFSettings FindOrCreateSettingsObject()
 		{
-			DGFSettings settingsAsset = (DGFSettings)AssetDatabase.LoadAssetAtPath("Assets/Textures/texture.jpg", typeof(DGFSettings));
+			DGFSettings settingsAsset = (DGFSettings)AssetDatabase.LoadAssetAtPath( "Assets/"+dataRoot+"/"+resourceFolder+"/DGFSettings/"+settingsName+".asset", typeof(DGFSettings));
 			if (settingsAsset != null) return settingsAsset;
 			if (!AssetDatabase.IsValidFolder("Assets/"+dataRoot))
 			{
@@ -70,8 +72,11 @@ namespace DrakeFramework.Editor
 			{
 				AssetDatabase.CreateFolder("Assets/"+dataRoot+"/"+resourceFolder, "DGFSettings");
 			}
+			if (settingsAsset == null)
+			{
+				settingsAsset = ScriptableObject.CreateInstance<DGFSettings>();
+			}
 
-			settingsAsset = ScriptableObject.CreateInstance<DGFSettings>();
 			settingsAsset.name = "DrakeFrameworkSettings";
         	AssetDatabase.CreateAsset(settingsAsset, "Assets/"+dataRoot+"/"+resourceFolder+"/DGFSettings/"+settingsName+".asset");
         	AssetDatabase.SaveAssets();

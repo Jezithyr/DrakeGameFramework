@@ -17,6 +17,8 @@ namespace DrakeFramework{
 		private static SessionManager sessionManager;
 		private static ModuleManager moduleManager;
 		private static ContentManager content;
+		private static TickingManager ticking;
+		public static TickingManager Ticking;
 		public static ContentManager Content => content;
 		private static UiManager ui;
 		public static UiManager Ui => ui;
@@ -25,6 +27,7 @@ namespace DrakeFramework{
 			moduleManager = new ModuleManager(); //This MUST load first
 												 //Gets all classes inheriting game server, instanstiates them and injects them into the gameService manager
 			content = new ContentManager(); //must load second
+			ticking = new TickingManager();
 			gameServiceManager = new ServiceManager(ReflectHelper.GetSubclassesInAllAssemblies(typeof(GameService)));
 			sessionManager = new SessionManager(moduleManager);
 			ui = new UiManager(); //must load after content manager
