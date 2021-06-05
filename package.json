@@ -1,5 +1,5 @@
 {
-  "name": "com.jmaster.drakeGameFramework",
+  "name": "com.jmaster.drakeframework",
   "version": "1.0.0",
   "displayName": "Drake Game Framework",
   "description": "A common game framework for creating games with modular systems and mod support",
@@ -9,13 +9,11 @@
   "changelogUrl": "https://example.com/changelog.html",
   "licensesUrl": "https://example.com/licensing.html",
   "dependencies": {
-    "com.unity.some-package": "1.0.0",
-    "com.unity.other-package": "2.0.0"
+	"com.unity.addressables": "1.16.19",
+	"com.unity.scriptablebuildpipeline": "1.16.1",
+	"com.unity.dots.editor": "0.12.0-preview.6"
  },
  "keywords": [
-    "keyword1",
-    "keyword2",
-    "keyword3"
   ],
   "author": {
     "name": "Jesse Rougeau",

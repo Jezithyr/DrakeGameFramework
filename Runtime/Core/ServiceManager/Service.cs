@@ -1,6 +1,6 @@
 
 
-namespace DrakeFramework
+namespace DrakeFramework.Core
 {
     public abstract class Service
     {

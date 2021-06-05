@@ -1,8 +1,8 @@
 
 using System.Collections.Generic;
+using DrakeFramework;
 
-
-namespace DrakeFramework
+namespace DrakeFramework.Core
 {
     public class ServiceManager
     {

@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Drake;
-    public static partial class Game
-    {
-		public const string BaseModTag = "FCR";
-		public const string BaseModName = "FCR_Base";
+using DrakeFramework.Core;
+
+namespace DrakeFramework{
+
+	public static partial class Game
+	{
+		//TODO: move these to a unity menu
+		public const string BaseModTag = "BASE";
+		public const string BaseModName = "BaseMod";
 		public static ModInfo BaseMod => content.BaseMod;
-		public static IReadOnlyList<Service> GameServices { get => gameServiceManager.Services;} //! If this throws an error, something is very wrong
-        private static ServiceManager gameServiceManager;
+		public static IReadOnlyList<Service> GameServices { get => gameServiceManager.Services; } //! If this throws an error, something is very wrong
+		private static ServiceManager gameServiceManager;
 		private static SessionManager sessionManager;
 		private static ModuleManager moduleManager;
 		private static ContentManager content;
@@ -18,7 +22,7 @@ using Drake;
 		internal static void Initialize()
 		{
 			moduleManager = new ModuleManager(); //This MUST load first
-			//Gets all classes inheriting game server, instanstiates them and injects them into the gameService manager
+												 //Gets all classes inheriting game server, instanstiates them and injects them into the gameService manager
 			content = new ContentManager(); //must load second
 			gameServiceManager = new ServiceManager(ReflectHelper.GetSubclassesInAllAssemblies(typeof(GameService)));
 			sessionManager = new SessionManager(moduleManager);
@@ -48,16 +52,17 @@ using Drake;
 			sessionManager.EndSession();
 		}
 
-		public static T GetService<T>() where T:GameService
+		public static T GetService<T>() where T : GameService
 		{
 			return gameServiceManager.GetService<T>();
 		}
-		public static void SetSessionClass<T>() where T:Session
+		public static void SetSessionClass<T>() where T : Session
 		{
-			if (typeof(T).IsAbstract) 
+			if (typeof(T).IsAbstract)
 			{
 				throw new System.Exception("Session class cannot be abstract!");
 			}
 			sessionManager.sessionClassname = typeof(T);
 		}
+	}
 }

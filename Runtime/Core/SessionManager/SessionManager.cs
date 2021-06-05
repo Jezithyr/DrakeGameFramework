@@ -1,25 +1,25 @@
 using System;
-
-
-namespace FCRCore
+using DrakeFramework;
+namespace DrakeFramework.Core
 {
-    public class SessionManager
-    {
+	public class SessionManager
+	{
 		internal System.Type sessionClassname = null;
-		public System.Type SessionClass {get => sessionClassname;}
+		public System.Type SessionClass { get => sessionClassname; }
 		private Session activeSession = null;
-		public Session ActiveSession {get=> activeSession;}
+		public Session ActiveSession { get => activeSession; }
 
 		private Action onSessionInit;
 		private Session.SessionDelegate onSessionStart;
 		private Session.SessionDelegate onSessionEnd;
-		internal SessionManager(ModuleManager moduleManager) 
+		internal SessionManager(ModuleManager moduleManager)
 		{
 			onSessionInit = moduleManager.OnSessionInit;
 		}
 		public void CreateSession()
 		{
-			if (sessionClassname == null) {
+			if (sessionClassname == null)
+			{
 				throw new System.Exception("Invalid Session Class!");
 			}
 			activeSession = ReflectHelper.CreateInstance<Session>(sessionClassname);
@@ -40,5 +40,5 @@ namespace FCRCore
 		}
 
 
-    }
+	}
 }

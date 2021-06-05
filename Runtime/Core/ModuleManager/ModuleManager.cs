@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DrakeFramework;
 
-namespace Drake
+namespace DrakeFramework.Core
 {
     public class ModuleManager
     {

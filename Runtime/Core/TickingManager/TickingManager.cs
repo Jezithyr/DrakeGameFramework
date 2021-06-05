@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-namespace FCRCore
+using DrakeFramework;
+namespace DrakeFramework.Core
 {
     public class TickingManager
     {

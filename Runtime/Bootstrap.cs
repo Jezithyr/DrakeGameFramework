@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Drake;
 
-namespace Drake.Core
+namespace DrakeFramework.Core
 {
     public static class GameBootstrap
     {

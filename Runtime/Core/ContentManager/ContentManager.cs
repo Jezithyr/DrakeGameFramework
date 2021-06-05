@@ -5,9 +5,11 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.AddressableAssets.ResourceLocators;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.IO;
 using System.Linq;
+
+namespace DrakeFramework
+{
 	public class ContentManager
 	{
 		public delegate void ModsEventDelegate(List<ModInfo> loadedMods);
@@ -16,7 +18,7 @@ using System.Linq;
 		private Dictionary<string, short> modTagLookup = new Dictionary<string, short>();
 		private Dictionary<string, short> modNameLookup = new Dictionary<string, short>();
 		private ModInfo baseMod;
-		public ModInfo BaseMod=>baseMod;
+		public ModInfo BaseMod => baseMod;
 		private Dictionary<string, IResourceLocation> assetRegistry = new Dictionary<string, IResourceLocation>();
 		private List<AsyncOperationHandle> loadedAssets = new List<AsyncOperationHandle>();
 
@@ -42,7 +44,7 @@ using System.Linq;
 		//get an asset's location by ref
 		public IResourceLocation GetAssetLocation(AssetReference assetReference, string modTag = Game.BaseModTag)
 		{
-			return GetAssetLocation(assetReference.Asset.name,modTag);
+			return GetAssetLocation(assetReference.Asset.name, modTag);
 		}
 
 		//Loads an asset by ref
@@ -107,7 +109,7 @@ using System.Linq;
 				throw new System.Exception(modName + " could not be found in loaded mods!");
 			}
 		}
-		
+
 		//gets the locations of all assets with a label
 		public IList<IResourceLocation> FindAssetsWithLabel(string label)
 		{
@@ -135,7 +137,7 @@ using System.Linq;
 				return locsOutput;
 			}
 			Debug.LogError("The mod could not be found, double check the addressible group settings");
-				return new List<IResourceLocation>();
+			return new List<IResourceLocation>();
 		}
 
 		//setup the lookup data for a loaded mod
@@ -246,21 +248,22 @@ using System.Linq;
 	}
 
 
-class modLocationEqualityComparaer : IEqualityComparer<IResourceLocation>
-{
-
-	public bool Equals(IResourceLocation x, IResourceLocation y)
+	class modLocationEqualityComparaer : IEqualityComparer<IResourceLocation>
 	{
-		//Check whether the compared objects reference the same data.
-        if (Object.ReferenceEquals(x, y)) return true;
-		return
-		x.PrimaryKey == y.PrimaryKey &&
-		 x.ResourceType == y.ResourceType &&
-		 x.ProviderId == y.PrimaryKey;
-	}
 
-	public int GetHashCode(IResourceLocation obj)
-	{
-		return obj.PrimaryKey.GetHashCode()*obj.InternalId.GetHashCode()*obj.ProviderId.GetHashCode();
+		public bool Equals(IResourceLocation x, IResourceLocation y)
+		{
+			//Check whether the compared objects reference the same data.
+			if (Object.ReferenceEquals(x, y)) return true;
+			return
+			x.PrimaryKey == y.PrimaryKey &&
+			 x.ResourceType == y.ResourceType &&
+			 x.ProviderId == y.PrimaryKey;
+		}
+
+		public int GetHashCode(IResourceLocation obj)
+		{
+			return obj.PrimaryKey.GetHashCode() * obj.InternalId.GetHashCode() * obj.ProviderId.GetHashCode();
+		}
 	}
 }
