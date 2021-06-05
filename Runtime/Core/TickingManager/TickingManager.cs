@@ -5,7 +5,7 @@ using UnityEngine.LowLevel;
 using DrakeFramework.Core;
 namespace DrakeFramework
 {
-	public delegate void OnEngineTickCallback();
+	public delegate void OnUpdateCallback();
 	public delegate void OnFixedUpdateCallback(float aDeltaTime);
 	public class TickingManager //internal constructor to prevent shinanegans
 	{
@@ -40,7 +40,7 @@ namespace DrakeFramework
 			}
 
 		}
-		private OnEngineTickCallback OnEngineTickEvent;
+		private OnUpdateCallback OnEngineTickEvent;
 
 		public void RegisterFixedUpdateEvent(float updateRate, OnFixedUpdateCallback callback, bool allowTimeMultiplier = true, float MaxAllowedTimeStep = 0)
 		{
@@ -62,6 +62,10 @@ namespace DrakeFramework
 			{
 				//This may cause issues
 				updateInstance.Callback -= callback;
+				if (updateInstance.Callback == null)
+				{
+					FixedUpdateEvents.Remove(updateRate);
+				}
 			}
 		}
 
@@ -77,8 +81,10 @@ namespace DrakeFramework
 			}
 		}
 
-		internal void RegisterEngineTickEvent(OnEngineTickCallback callback) { OnEngineTickEvent += callback; }
-		internal void RemoveEngineTickEvent(OnEngineTickCallback callback) { OnEngineTickEvent -= callback; }
+		public void RegisterUpdateEvent(OnUpdateCallback callback) { OnEngineTickEvent += callback; }
+		public void RemoveUpdateEvent(OnUpdateCallback callback) {
+			OnEngineTickEvent -= callback; 
+		}
 		private void OnEngineTick()
 		{
 			//TODO: add functionality to allow for modules to tick on the menu? (This might not be needed or wanted)
@@ -101,7 +107,7 @@ namespace DrakeFramework
 			PlayerLoopSystem GameManagerUpdate = new PlayerLoopSystem() //create the new update subsystem
 			{
 				updateDelegate = OnEngineTick,
-				type = typeof(OnEngineTickCallback)
+				type = typeof(OnUpdateCallback)
 			};
 			//inject our new update subsystems into our new playerloop
 

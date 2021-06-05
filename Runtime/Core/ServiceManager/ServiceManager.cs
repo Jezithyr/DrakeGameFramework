@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 using DrakeFramework;
 
 namespace DrakeFramework.Core
@@ -17,6 +18,7 @@ namespace DrakeFramework.Core
 				Service service = ReflectHelper.CreateInstance<Service>(serviceType);
 				serviceTypeLookup.Add(service.GetType(), service);
 				InsertServiceSorted(service);
+				TryRegisterTickingService(service);
 			}
 		}
 
@@ -26,6 +28,7 @@ namespace DrakeFramework.Core
 			{
 				serviceTypeLookup.Add(service.GetType(), service);
 				InsertServiceSorted(service);
+				TryRegisterTickingService(service);
 			}
 		}
 
@@ -50,6 +53,7 @@ namespace DrakeFramework.Core
 		{
 			foreach (var service in services)
 			{
+				TryDeRegisterTickingService(service);
 				service.internal_Dispose();
 			}
 		}
@@ -77,6 +81,41 @@ namespace DrakeFramework.Core
                 	return;
             	}
             	services.Insert(index + 1, service);	
+		}
+
+		private void TryDeRegisterTickingService(Service service)
+		{
+			ITickable tickableService = service as ITickable;
+				if (tickableService != null)
+				{
+					Debug.Log("Removing Update for service:" +service.ToString());
+					Game.Ticking.RemoveUpdateEvent(tickableService.OnUpdate);
+				} else 
+				{
+					IFixedTickable fixedTickableService = service as IFixedTickable;
+					if (fixedTickableService != null)
+					{
+						Debug.Log("Removing FixedUpdate for service:" +service.ToString());
+						Game.Ticking.RemoveFixedUpdateEvent(fixedTickableService.UpdateRate, fixedTickableService.OnUpdate);
+					}
+				}
+		}
+		private void TryRegisterTickingService(Service service)
+		{
+			ITickable tickableService = service as ITickable;
+				if (tickableService != null)
+				{
+					Debug.Log("Registering Update for service:" +service.ToString());
+					Game.Ticking.RegisterUpdateEvent(tickableService.OnUpdate);
+				} else 
+				{
+					IFixedTickable fixedTickableService = service as IFixedTickable;
+					if (fixedTickableService != null)
+					{
+						Debug.Log("Registering FixedUpdate for service:" +service.ToString());
+						Game.Ticking.RegisterFixedUpdateEvent(fixedTickableService.UpdateRate, fixedTickableService.OnUpdate, fixedTickableService.CanBeMultiplied, fixedTickableService.MaxTimestep);
+					}
+				}
 		}
     }
 }

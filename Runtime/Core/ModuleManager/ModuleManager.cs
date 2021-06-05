@@ -35,6 +35,20 @@ namespace DrakeFramework.Core
 			foreach (var module in loadedModules)
 			{
 				module.internal_Load();
+				ITickable tickableModule = module as ITickable;
+				if (tickableModule != null)
+				{
+					Debug.Log("Registering Update for:" +module.ToString());
+					Game.Ticking.RegisterUpdateEvent(tickableModule.OnUpdate);
+				} else 
+				{
+					IFixedTickable fixedTickableModule = module as IFixedTickable;
+					if (fixedTickableModule != null)
+					{
+						Debug.Log("Registering FixedUpdate for:" +module.ToString());
+						Game.Ticking.RegisterFixedUpdateEvent(fixedTickableModule.UpdateRate, fixedTickableModule.OnUpdate, fixedTickableModule.CanBeMultiplied, fixedTickableModule.MaxTimestep);
+					}
+				}
 			}
 		}
 
@@ -63,6 +77,20 @@ namespace DrakeFramework.Core
 			foreach (var module in loadedModules)
 			{
 				module.internal_Unload();
+				ITickable tickableModule = module as ITickable;
+				if (tickableModule != null)
+				{
+					Debug.Log("Removing Update for Module:" +module.ToString());
+					Game.Ticking.RemoveUpdateEvent(tickableModule.OnUpdate);
+				} else 
+				{
+					IFixedTickable fixedTickableModule = module as IFixedTickable;
+					if (fixedTickableModule != null)
+					{
+						Debug.Log("Removing Fixed Update for Module:" +module.ToString());
+						Game.Ticking.RemoveFixedUpdateEvent(fixedTickableModule.UpdateRate, fixedTickableModule.OnUpdate);
+					}
+				}
 			}
 		}
     }
