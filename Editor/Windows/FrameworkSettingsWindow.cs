@@ -64,6 +64,10 @@ namespace DrakeFramework.Editor
 			{
 				AssetDatabase.CreateFolder("Assets/"+dataRoot, resourceFolder);
 			}
+			if (!AssetDatabase.IsValidFolder("Assets/"+dataRoot+"/"+resourceFolder+"/DGFSettings"))
+			{
+				AssetDatabase.CreateFolder("Assets/"+dataRoot+"/"+resourceFolder, "DGFSettings");
+			}
 
 			settingsAsset = ScriptableObject.CreateInstance<GameSettings>();
 			settingsAsset.name = "DrakeFrameworkSettings";
