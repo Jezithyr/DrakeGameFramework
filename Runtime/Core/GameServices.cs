@@ -19,17 +19,18 @@ namespace DrakeFramework
 			InitializeECSServices(); //this may cause issues if ECS is disabled?
 		}
 		static partial void InitializeECSServices();
-		public static T CreateTransientService<T>() where T : TransientService
+		public static T CreateTransientService<T>() where T : TransientService, new()
 		{
-			return transientServiceManager.GetService<T>();
+			
+			return transientServiceManager.AddNewService<T>();;
 		}
 
-		public static void KillTransientService<T>() where T : TransientService
+		public static void KillTransientService<T>() where T : TransientService, new()
 		{
 			transientServiceManager.KillService(typeof(T));
 		}
 
-		public static T GetTransientService<T>() where T : TransientService
+		public static T GetTransientService<T>() where T : TransientService, new()
 		{
 			if (transientServiceManager.HasService(typeof(T)))
 			{
@@ -38,12 +39,12 @@ namespace DrakeFramework
 			return null;
 		}
 
-		public static bool HasTransientService<T>() where T : TransientService
+		public static bool HasTransientService<T>() where T : TransientService, new()
 		{
 			return transientServiceManager.HasService(typeof(T));
 		}
 
-		public static bool TryGetTransientService<T>(out T service) where T : TransientService
+		public static bool TryGetTransientService<T>(out T service) where T : TransientService, new()
 		{
 			if (transientServiceManager.HasService(typeof(T)))
 			{

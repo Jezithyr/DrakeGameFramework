@@ -18,7 +18,6 @@ namespace DrakeFramework.Core
 				Service service = ReflectHelper.CreateInstance<Service>(serviceType);
 				serviceTypeLookup.Add(service.GetType(), service);
 				InsertServiceSorted(service);
-				TryRegisterTickingService(service);
 			}
 		}
 
@@ -28,7 +27,6 @@ namespace DrakeFramework.Core
 			{
 				serviceTypeLookup.Add(service.GetType(), service);
 				InsertServiceSorted(service);
-				TryRegisterTickingService(service);
 			}
 		}
 
@@ -60,6 +58,7 @@ namespace DrakeFramework.Core
 			foreach (var service in services)
 			{
 				service.internal_Initialize();
+				TryRegisterTickingService(service);
 			}
 		}
 
@@ -98,14 +97,15 @@ namespace DrakeFramework.Core
 			services.Insert(index + 1, service);
 		}
 
-		internal void AddNewService<T>() where T : Service, new()
+		internal T AddNewService<T>() where T : Service, new()
 		{
-			if (serviceTypeLookup.ContainsKey(typeof(T))) return; //don't add duplicates
+			if (serviceTypeLookup.ContainsKey(typeof(T))) return (T)serviceTypeLookup[typeof(T)]; //don't add duplicates
 			T service = new T();
 			serviceTypeLookup.Add(service.GetType(), service);
 			InsertServiceSorted(service);
 			service.internal_Initialize();
 			TryRegisterTickingService(service);
+			return service;
 		}
 
 		private void TryDeRegisterTickingService(Service service)
@@ -121,7 +121,7 @@ namespace DrakeFramework.Core
 				IFixedTickable fixedTickableService = service as IFixedTickable;
 				if (fixedTickableService != null)
 				{
-					Debug.Log("Removing FixedUpdate for service:" + service.ToString());
+					Debug.Log("Removing FixedUpdate (if present) for service:" + service.ToString());
 					Game.Ticking.RemoveFixedUpdateEvent(fixedTickableService.UpdateRate, fixedTickableService.OnUpdate);
 				}
 			}

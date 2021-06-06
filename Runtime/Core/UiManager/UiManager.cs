@@ -113,6 +113,15 @@ namespace DrakeFramework
 				Debug.LogError(screenName + " not found in prefab data!");
 			}
 		}
+		public void UnloadAllScreens()
+		{
+			foreach (var screenData in loadedScreens)
+			{
+				Object.Destroy(screenData.Value);
+			}
+			loadedScreens.Clear();
+		}
+
 		//unloads a screen from the scene
 		public void UnloadScreen(string screenName)
 		{
