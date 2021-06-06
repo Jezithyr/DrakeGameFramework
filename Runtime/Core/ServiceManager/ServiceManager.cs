@@ -121,7 +121,7 @@ namespace DrakeFramework.Core
 				IFixedTickable fixedTickableService = service as IFixedTickable;
 				if (fixedTickableService != null)
 				{
-					Debug.Log("Removing FixedUpdate (if present) for service:" + service.ToString());
+					Debug.Log("Removing FixedUpdate for service:" + service.ToString());
 					Game.Ticking.RemoveFixedUpdateEvent(fixedTickableService.UpdateRate, fixedTickableService.OnUpdate);
 				}
 			}
