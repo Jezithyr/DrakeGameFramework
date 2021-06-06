@@ -6,4 +6,5 @@ using DrakeFramework.Core;
 
 public abstract class TransientService : Service
 {
+	public override int Priority => 0;
 }
