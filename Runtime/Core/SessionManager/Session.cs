@@ -9,13 +9,30 @@ namespace DrakeFramework
 		public delegate void SessionEventDelegate(Session session);
 		public IReadOnlyList<Service> Services { get => sessionServiceManager.Services; }
 		private ServiceManager sessionServiceManager;
+		internal Dictionary<System.Type, SessionData> managedSessionData = new Dictionary<System.Type, SessionData>();
 		public Session()
 		{
 			sessionServiceManager = new ServiceManager(ReflectHelper.GetSubclassesInAllAssemblies(typeof(SessionService)));
+			CreateManagedSessionData();
 			InitializeSession();
 		}
 
-		public T GetService<T>() where T : SessionService
+		private void CreateManagedSessionData()
+		{
+			System.Type[] sessionDataTypes = ReflectHelper.GetSubclassesInAllAssemblies(typeof(SessionData));
+			foreach (var sessionDataType in sessionDataTypes)
+			{
+				SessionData newData =  ReflectHelper.CreateInstance<SessionData>(sessionDataType);
+				newData.internal_OnCreate();
+				managedSessionData.Add(sessionDataType,newData);
+			}
+		}
+
+		public T GetManagedData<T>() where T:SessionData, new()
+		{
+			return (T)managedSessionData[typeof(T)];
+		}
+		public T GetService<T>() where T : SessionService, new()
 		{
 			return sessionServiceManager.GetService<T>();
 		}
