@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace DrakeFramework
 {
-    public abstract class UIMonoBehavior : MonoBehaviour
+    public abstract class UIMonoBehaviour : MonoBehaviour
     {
         private const string MainMenuScene = "MainMenu";
 		public void ShowScreen(string screenName)
@@ -24,6 +24,10 @@ namespace DrakeFramework
 		public void UnloadScreen(string screenName)
 		{
 			Game.Ui.UnloadScreen(screenName);
+		}
+		public void UnloadAllScreens()
+		{
+			Game.Ui.UnloadAllScreens();
 		}
 		public void LoadScene(string SceneName)
 		{
