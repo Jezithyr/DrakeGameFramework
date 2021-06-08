@@ -13,7 +13,7 @@ namespace DrakeFramework.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 		static void Bootstrap()
 		{
-			Debug.Log("Starting FCR");
+			Debug.Log("Starting Drake Framework");
 			LoadBaseFrameworkSettings();
 			Application.quitting += Game.Exiting;
 			//loading settings:
