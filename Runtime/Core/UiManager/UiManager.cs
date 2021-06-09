@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
-
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace DrakeFramework
 {
@@ -24,7 +25,7 @@ namespace DrakeFramework
 			Game.Content.RegisterOnModsLoadMethod(OnModsLoaded);
 			Game.Content.RegisterOnModsUnloadMethod(OnModsUnloaded);
 			UiRoot = GameObject.Instantiate(Resources.Load<GameObject>("DGF/UiRoot"));
-			UiRoot.name = "UI";
+			UiRoot.name = "Drake.UI";
 			Object.DontDestroyOnLoad(UiRoot);
 		}
 
@@ -100,6 +101,9 @@ namespace DrakeFramework
 				newScreen.transform.SetParent(UiRoot.transform, true);
 				newScreen.name = screenName;
 				loadedScreens.Add(QualifiedName, newScreen);
+				GameObject.Destroy(newScreen.GetComponentInChildren<GraphicRaycaster>());
+				GameObject.Destroy(newScreen.GetComponentInChildren<CanvasScaler>());
+				GameObject.Destroy(newScreen.GetComponentInChildren<Canvas>());
 				if (setVisiblityOnLoad)
 				{
 					SetScreenVisible(screenName, visibility);
