@@ -23,7 +23,7 @@ namespace DrakeFramework
 		{
 			Game.Content.RegisterOnModsLoadMethod(OnModsLoaded);
 			Game.Content.RegisterOnModsUnloadMethod(OnModsUnloaded);
-			Addressables.InstantiateAsync("FCRCore.UiRoot").Completed += (handle) =>
+			Addressables.InstantiateAsync("Drake.UiRoot").Completed += (handle) =>
 			{
 				UiRoot = handle.Result;
 				UiRoot.name = "UI";
