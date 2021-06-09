@@ -101,9 +101,14 @@ namespace DrakeFramework
 				newScreen.transform.SetParent(UiRoot.transform, true);
 				newScreen.name = screenName;
 				loadedScreens.Add(QualifiedName, newScreen);
-				GameObject.Destroy(newScreen.GetComponentInChildren<GraphicRaycaster>());
-				GameObject.Destroy(newScreen.GetComponentInChildren<CanvasScaler>());
-				GameObject.Destroy(newScreen.GetComponentInChildren<Canvas>());
+				//removing any canvas' on ui prefabs to prevent scaling issues
+				if (newScreen.GetComponentInChildren<Canvas>() != null)
+				{
+					GameObject.Destroy(newScreen.GetComponentInChildren<GraphicRaycaster>());
+					GameObject.Destroy(newScreen.GetComponentInChildren<CanvasScaler>());
+					GameObject.Destroy(newScreen.GetComponentInChildren<Canvas>());
+				}
+				
 				if (setVisiblityOnLoad)
 				{
 					SetScreenVisible(screenName, visibility);
