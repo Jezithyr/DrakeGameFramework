@@ -23,12 +23,9 @@ namespace DrakeFramework
 		{
 			Game.Content.RegisterOnModsLoadMethod(OnModsLoaded);
 			Game.Content.RegisterOnModsUnloadMethod(OnModsUnloaded);
-			Addressables.InstantiateAsync("Drake.UiRoot").Completed += (handle) =>
-			{
-				UiRoot = handle.Result;
-				UiRoot.name = "UI";
-				Object.DontDestroyOnLoad(UiRoot);
-			};
+			UiRoot = GameObject.Instantiate(Resources.Load<GameObject>("DGF/UiRoot"));
+			UiRoot.name = "UI";
+			Object.DontDestroyOnLoad(UiRoot);
 		}
 
 		public bool HasScreen(string screenName)
@@ -186,7 +183,7 @@ namespace DrakeFramework
 		//destructor to cleanup references
 		~UiManager()
 		{
-			Addressables.ReleaseInstance(UiRoot);
+			GameObject.Destroy(UiRoot);
 			ReleasePrefabs();
 		}
 	}
