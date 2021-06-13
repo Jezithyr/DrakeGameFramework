@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using DrakeFramework.Core;
 namespace DrakeFramework
-{
+{	
+	public abstract class SessionServiceWrapper<T> : DGFScriptableRef where T : SessionService, new()
+	{
+		public T Service => Game.Session.GetService<T>();
+	}
+
+
 	//Abstract baseclass for all session based services
 	public abstract class SessionService : Service
 	{

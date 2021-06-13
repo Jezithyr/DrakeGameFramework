@@ -1,5 +1,7 @@
 
 
+using UnityEngine;
+
 namespace DrakeFramework.Core
 {
     public abstract class Service
@@ -8,7 +10,10 @@ namespace DrakeFramework.Core
 		//called when the service is initialized
 		protected abstract void Initialize();
 		//called when a service is reset
-		protected abstract void Reset();
+		protected virtual void Reset() {
+			internal_Dispose();
+			internal_Initialize();
+		}
 		//called when the service is destroyed
 		protected abstract void Dispose();
 		//called when the service is restarted

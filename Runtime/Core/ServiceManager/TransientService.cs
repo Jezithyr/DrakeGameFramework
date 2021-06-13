@@ -4,7 +4,14 @@ using UnityEngine;
 using DrakeFramework;
 using DrakeFramework.Core;
 
-public abstract class TransientService : Service
+namespace DrakeFramework
 {
-	public override int Priority => 0;
+	public abstract class TransientServiceWrapper<T> : DGFScriptableRef where T : TransientService, new()
+	{
+		public T Service => Game.GetTransientService<T>();
+	}
+	public abstract class TransientService : Service
+	{
+		public override int Priority => 0;
+	}
 }

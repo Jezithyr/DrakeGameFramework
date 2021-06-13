@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace DrakeFramework
 {
+	public abstract class SessionDataWrapper<T> :DGFScriptableRef where T:SessionData, new()
+	{
+		public T Data => Game.Session.GetManagedData<T>();
+	}
+
     public abstract class SessionData
     {
 		//The order of onCreate is nondeterministic! Don't use it to load dependencies!

@@ -13,6 +13,7 @@ namespace DrakeFramework
 		internal static string baseModName = "BaseMod";
 		public static string BaseModName => baseModName;
 		public static ModInfo BaseMod => content.BaseMod;
+		public static Session Session => sessionManager.ActiveSession;
 		private static SessionManager sessionManager;
 		private static ModuleManager moduleManager;
 		private static ContentManager content;

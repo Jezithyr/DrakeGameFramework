@@ -12,10 +12,10 @@ namespace DrakeFramework.Editor
 		private const string dataRoot = "DrakeFramework";
 		private const string resourceFolder = "Resources";
 		private const string settingsName = "CoreSettings";
-
 		private string baseModName = "BaseMod";
 		private string baseModTag = "BASE";
 		private DGFSettings settings;
+		private bool wrappersEnabled;
 
 		// Add menu named "My Window" to the Window menu
 		[MenuItem("Window/DrakeFramework/Settings")]
@@ -30,6 +30,7 @@ namespace DrakeFramework.Editor
 			settings = FindOrCreateSettingsObject();
 			baseModName = settings.BaseModName;
 			baseModTag = settings.BaseModTag;
+			
 		}
 		void OnGUI()
     	{
@@ -38,14 +39,22 @@ namespace DrakeFramework.Editor
 				FrameworkSettingsWindow window = (FrameworkSettingsWindow)EditorWindow.GetWindow(typeof(FrameworkSettingsWindow));
 				window.Close();
 			}
+			wrappersEnabled = EditorPrefs.GetBool("UsingWrappers", false);
         	GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 			settings.BaseModName = EditorGUILayout.TextField("BaseMod Name:", baseModName);
 			settings.BaseModTag = EditorGUILayout.TextField("BaseMod Tag:", baseModTag);
+			wrappersEnabled = EditorGUILayout.Toggle("Use SO Wrappers:", wrappersEnabled);
+			EditorPrefs.SetBool("UsingWrappers",wrappersEnabled);
 			baseModName = settings.BaseModName;
 			baseModTag = settings.BaseModTag;
         	//groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", groupEnabled);
         	//EditorGUILayout.EndToggleGroup();
     	}
+		public override void SaveChanges()
+		{
+			
+			base.SaveChanges();
+		}
 
 		private static DGFSettings FindOrCreateSettingsObject()
 		{
