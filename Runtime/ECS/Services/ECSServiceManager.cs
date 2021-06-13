@@ -119,7 +119,7 @@ namespace DrakeFramework.Entities
 			return service;
 		}
 
-		public ECSService CreateWorld(string world, int priority, WorldFlags flags)
+		public ECSService CreateWorld(string world, int priority, WorldFlags flags = WorldFlags.Simulation)
 		{
 			if (ECSServiceWorldLookup.ContainsKey(world)) return ECSServiceWorldLookup[world]; //don't add duplicates
 			ECSService service = new ECSService(world, priority, flags);
