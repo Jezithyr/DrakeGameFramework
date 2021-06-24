@@ -39,6 +39,10 @@ namespace DrakeFramework
 			return null;
 		}
 
+		public static T GetSessionService<T>() where T: SessionService, new ()
+		{
+			return Session.GetService<T>();
+		}
 		public static bool HasTransientService<T>() where T : TransientService, new()
 		{
 			return transientServiceManager.HasService(typeof(T));
@@ -54,7 +58,6 @@ namespace DrakeFramework
 			service = null;
 			return false;
 		}
-
 		public static T GetService<T>() where T : GameService
 		{
 			return gameServiceManager.GetService<T>();

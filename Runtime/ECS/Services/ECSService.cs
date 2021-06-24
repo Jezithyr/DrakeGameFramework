@@ -42,6 +42,17 @@ namespace DrakeFramework.Entities
 			return new EntityData(World, CreateRawEntity(archetype));
 		}
 
+		public EntityArchetype GetArchetype(params IComponentData[] components)
+		{
+			ComponentType[] temp = new ComponentType[components.Length];
+			for (int i = 0; i < components.Length; i++)
+			{
+				temp[i] = components[i].GetType();
+			}
+			return manager.CreateArchetype(temp);
+		}
+
+
 		public EntityData CreateEntity(params ComponentType[] componentTypes)
 		{
 			return new EntityData(World, CreateRawEntity(componentTypes));
