@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Dependencies;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Editor
 {
@@ -11,6 +13,7 @@ namespace Editor
     {
         static EditorBootstrap()
         {
+            var stopwatch = Stopwatch.StartNew();
             if (!AssetDatabase.IsValidFolder("Assets"))
             {
                 AssetDatabase.CreateFolder("Assets", "DGF");
@@ -41,6 +44,8 @@ namespace Editor
                     AssetDatabase.CreateAsset(obj, $"Assets/DGF/Services/{type.Name}.asset");
                 }
             }
+
+            Debug.Log($"Ran {nameof(EditorBootstrap)} in {stopwatch.Elapsed.TotalSeconds:F4} seconds");
         }
     }
 }
