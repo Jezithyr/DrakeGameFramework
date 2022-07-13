@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Dependencies;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -10,17 +11,29 @@ namespace Ticking
     {
         private delegate void OnUpdateCallback();
 
+        private readonly SortedList<string, IService> services = new();
+
+        public TickingService()
+        {
+            IoC.ServiceAdded += service => services.Add(service.GetType().FullName!, service);
+
+            foreach (var service in IoC.All())
+            {
+                services.Add(service.GetType().FullName!, service);
+            }
+        }
+
         public override void Initialize()
         {
             var loop = PlayerLoop.GetCurrentPlayerLoop();
             var fixedUpdate = new PlayerLoopSystem
             {
-                updateDelegate = FixedUpdate,
+                updateDelegate = FixedUpdateLoop,
                 type = typeof(OnUpdateCallback)
             };
             var update = new PlayerLoopSystem
             {
-                updateDelegate = FixedUpdate,
+                updateDelegate = UpdateLoop,
                 type = typeof(OnUpdateCallback)
             };
 
@@ -30,12 +43,20 @@ namespace Ticking
             PlayerLoop.SetPlayerLoop(loop);
         }
 
-        private void FixedUpdate()
+        private void FixedUpdateLoop()
         {
+            foreach (var service in services.Values)
+            {
+                service.FixedUpdate();
+            }
         }
 
-        private void Update()
+        private void UpdateLoop()
         {
+            foreach (var service in services.Values)
+            {
+                service.Update();
+            }
         }
 
         private static void InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct

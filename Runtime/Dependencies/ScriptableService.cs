@@ -11,5 +11,13 @@ namespace Dependencies
         public virtual void Shutdown()
         {
         }
+
+        public virtual void FixedUpdate()
+        {
+        }
+
+        public virtual void Update()
+        {
+        }
     }
 }

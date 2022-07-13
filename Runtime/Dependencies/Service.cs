@@ -2,12 +2,9 @@
 {
     public interface IService
     {
-        public virtual void Initialize()
-        {
-        }
-
-        public virtual void Shutdown()
-        {
-        }
+        void Initialize();
+        void Shutdown();
+        void FixedUpdate();
+        void Update();
     }
 }

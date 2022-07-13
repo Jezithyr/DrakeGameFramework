@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
 using Helpers;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Dependencies
     public static class IoC
     {
         private static readonly ConcurrentDictionary<Type, IService> Services = new();
+        public static event Action<IService>? ServiceAdded;
 
         public static void Add<T>() where T : IService, new()
         {
@@ -22,6 +24,8 @@ namespace Dependencies
             {
                 throw new ArgumentException($"Service {type} is already added");
             }
+
+            ServiceAdded?.Invoke(service);
         }
 
         public static void Add(Assembly assembly)
@@ -38,6 +42,11 @@ namespace Dependencies
                 var service = (IService) Activator.CreateInstance(type);
                 Add(service);
             }
+        }
+
+        public static IEnumerable<IService> All()
+        {
+            return Services.Values;
         }
 
         public static void Initialize()
