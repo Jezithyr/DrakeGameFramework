@@ -5,7 +5,7 @@ using UnityEngine.PlayerLoop;
 
 namespace Ticking
 {
-    public class TickingManager : ScriptableService
+    public class TickingService : ScriptableService
     {
         private delegate void OnUpdateCallback();
 
