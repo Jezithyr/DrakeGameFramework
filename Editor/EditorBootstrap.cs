@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Dependencies;
-using Helpers;
+using Editor.Helpers;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -17,7 +17,7 @@ namespace Editor
         static EditorBootstrap()
         {
             var stopwatch = Stopwatch.StartNew();
-            AssetHelpers.CreateAllFolders(Path);
+            EditorAddressableHelpers.CreateAllFolders(Path);
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -36,8 +36,8 @@ namespace Editor
                     }
 
                     var obj = (ScriptableService) ScriptableObject.CreateInstance(type);
-
                     AssetDatabase.CreateAsset(obj, assetPath);
+                    EditorAddressableHelpers.SetAddressable(assetPath);
                 }
             }
 
