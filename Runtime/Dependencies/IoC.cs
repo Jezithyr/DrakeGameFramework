@@ -7,14 +7,14 @@ namespace Dependencies
 {
     public static class IoC
     {
-        private static readonly ConcurrentDictionary<Type, Service> Services = new();
+        private static readonly ConcurrentDictionary<Type, IService> Services = new();
 
-        public static void Add<T>() where T : Service, new()
+        public static void Add<T>() where T : IService, new()
         {
             Add(new T());
         }
 
-        public static void Add(Service service)
+        public static void Add(IService service)
         {
             var type = service.GetType();
             if (!Services.TryAdd(type, service))
@@ -27,12 +27,12 @@ namespace Dependencies
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (!typeof(Service).IsAssignableFrom(type) || type.IsAbstract)
+                if (!typeof(IService).IsAssignableFrom(type) || type.IsAbstract)
                 {
                     continue;
                 }
 
-                var service = (Service) Activator.CreateInstance(type);
+                var service = (IService) Activator.CreateInstance(type);
                 Add(service);
             }
         }
@@ -81,7 +81,7 @@ namespace Dependencies
             return obj;
         }
 
-        public static T? Get<T>() where T : Service
+        public static T? Get<T>() where T : IService
         {
             return (T?) Get(typeof(T));
         }

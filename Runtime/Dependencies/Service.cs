@@ -1,6 +1,6 @@
 ﻿namespace Dependencies
 {
-    public abstract class Service : IPostInject
+    public interface IService
     {
         public virtual void Initialize()
         {
