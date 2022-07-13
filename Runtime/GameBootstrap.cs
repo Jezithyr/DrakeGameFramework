@@ -10,7 +10,7 @@ public static class GameBootstrap
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     static void Bootstrap()
     {
-        Debug.Log("Starting FCR");
+        Debug.Log("Starting DGF");
         Application.quitting += Game.Exiting;
         //loading settings:
         Game.Initialize();

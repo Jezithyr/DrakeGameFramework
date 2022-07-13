@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Helpers;
+using UnityEngine;
 
 namespace Dependencies
 {
@@ -27,7 +28,9 @@ namespace Dependencies
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (!typeof(IService).IsAssignableFrom(type) || type.IsAbstract)
+                if (!typeof(IService).IsAssignableFrom(type) ||
+                    typeof(ScriptableObject).IsAssignableFrom(type) ||
+                    type.IsAbstract)
                 {
                     continue;
                 }
