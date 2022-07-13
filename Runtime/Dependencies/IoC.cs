@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Helpers;
 
 namespace Dependencies
@@ -24,11 +24,29 @@ namespace Dependencies
             }
         }
 
-        // TODO use IL
-        public static T Instantiate<T>()
+        public static void Initialize()
         {
-            var type = typeof(T);
-            var obj = Activator.CreateInstance<T>();
+            var postInject = new List<IPostInject>();
+            foreach (var (type, service) in Services)
+            {
+                Inject(service);
+
+                if (typeof(IPostInject).IsAssignableFrom(type))
+                {
+                    postInject.Add((IPostInject) service);
+                }
+            }
+
+            foreach (var service in postInject)
+            {
+                service.Initialize();
+            }
+        }
+
+        // TODO use IL
+        private static void Inject(object obj)
+        {
+            var type = obj.GetType();
 
             foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
@@ -40,6 +58,17 @@ namespace Dependencies
                 var serviceType = field.FieldType;
                 var service = Services[serviceType];
                 field.SetValue(obj, service);
+            }
+        }
+
+        public static T Instantiate<T>()
+        {
+            var obj = Activator.CreateInstance<T>();
+            Inject(obj);
+
+            if (obj is IPostInject postInject)
+            {
+                postInject.Initialize();
             }
 
             return obj;
