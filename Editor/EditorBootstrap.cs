@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Dependencies;
@@ -12,13 +13,14 @@ namespace Editor
     [InitializeOnLoad]
     public static class EditorBootstrap
     {
-        private const string Path = "Assets/DGF/Services";
+        private const string ServicesPath = "Assets/DGF/Services";
 
         static EditorBootstrap()
         {
             var stopwatch = Stopwatch.StartNew();
-            EditorAddressableHelpers.CreateAllFolders(Path);
+            EditorAddressableHelpers.CreateAllFolders(ServicesPath);
 
+            var assetFileNames = new HashSet<string>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
@@ -29,7 +31,10 @@ namespace Editor
                         continue;
                     }
 
-                    var assetPath = $"{Path}/{type.Name}.asset";
+                    var fileName = $"{type.Name}.asset";
+                    assetFileNames.Add(fileName);
+
+                    var assetPath = $"{ServicesPath}/{fileName}";
                     if (File.Exists(assetPath))
                     {
                         continue;
@@ -38,6 +43,14 @@ namespace Editor
                     var obj = (ScriptableService) ScriptableObject.CreateInstance(type);
                     AssetDatabase.CreateAsset(obj, assetPath);
                     EditorAddressableHelpers.SetAddressable(assetPath);
+                }
+            }
+
+            foreach (var file in Directory.EnumerateFiles(ServicesPath, "*.asset"))
+            {
+                if (!assetFileNames.Contains(Path.GetFileName(file)))
+                {
+                    AssetDatabase.DeleteAsset(file);
                 }
             }
 
