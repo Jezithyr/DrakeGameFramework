@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using Dependencies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,7 +11,7 @@ public static partial class Game
     {
         var stopwatch = Stopwatch.StartNew();
 
-        Addressables.LoadAssetsAsync<ScriptableService>("Assets/DGF/Services/TickingManager.asset", IoC.Add).WaitForCompletion();
+        RegisterScriptableServices();
         IoC.Add(typeof(Game).Assembly);
         IoC.Initialize();
 
@@ -24,5 +25,15 @@ public static partial class Game
     public static void ExitProgram()
     {
         Application.Quit();
+    }
+
+    private static void RegisterScriptableServices()
+    {
+        var assets = Directory.GetFiles("Assets/DGF/Services", "*.asset");
+        foreach (var asset in assets)
+        {
+            var path = asset.Replace('\\', '/');
+            Addressables.LoadAssetAsync<ScriptableService>(path).Completed += service => IoC.Add(service.Result);
+        }
     }
 }
