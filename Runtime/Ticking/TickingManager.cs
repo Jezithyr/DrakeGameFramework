@@ -2,7 +2,7 @@
 
 namespace Ticking
 {
-    public class TickingManager : Service
+    public class TickingManager : IService
     {
     }
 }
