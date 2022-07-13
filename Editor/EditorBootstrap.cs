@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Dependencies;
+using Helpers;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -11,18 +12,12 @@ namespace Editor
     [InitializeOnLoad]
     public static class EditorBootstrap
     {
+        private const string Path = "Assets/DGF/Services";
+
         static EditorBootstrap()
         {
             var stopwatch = Stopwatch.StartNew();
-            if (!AssetDatabase.IsValidFolder("Assets"))
-            {
-                AssetDatabase.CreateFolder("Assets", "DGF");
-            }
-
-            if (!AssetDatabase.IsValidFolder("Assets/DGF"))
-            {
-                AssetDatabase.CreateFolder("Assets/DGF", "Services");
-            }
+            AssetHelpers.CreateAllFolders(Path);
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -34,14 +29,15 @@ namespace Editor
                         continue;
                     }
 
-                    if (File.Exists($"Assets/DGF/Services/{type.Name}.asset"))
+                    var assetPath = $"{Path}/{type.Name}.asset";
+                    if (File.Exists(assetPath))
                     {
                         continue;
                     }
 
                     var obj = (ScriptableService) ScriptableObject.CreateInstance(type);
 
-                    AssetDatabase.CreateAsset(obj, $"Assets/DGF/Services/{type.Name}.asset");
+                    AssetDatabase.CreateAsset(obj, assetPath);
                 }
             }
 
