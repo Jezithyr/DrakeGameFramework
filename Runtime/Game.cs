@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Dependencies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -7,11 +8,11 @@ using Debug = UnityEngine.Debug;
 
 public static partial class Game
 {
-    internal static void Initialize()
+    internal static async Task Initialize()
     {
         var stopwatch = Stopwatch.StartNew();
 
-        RegisterScriptableServices();
+        await RegisterScriptableServices();
         IoC.Add(typeof(Game).Assembly);
         IoC.Initialize();
 
@@ -27,13 +28,14 @@ public static partial class Game
         Application.Quit();
     }
 
-    private static void RegisterScriptableServices()
+    private static async Task RegisterScriptableServices()
     {
         var assets = Directory.GetFiles("Assets/DGF/Services", "*.asset");
         foreach (var asset in assets)
         {
             var path = asset.Replace('\\', '/');
-            Addressables.LoadAssetAsync<ScriptableService>(path).Completed += service => IoC.Add(service.Result);
+            var service = await Addressables.LoadAssetAsync<ScriptableService>(path).Task;
+            IoC.Add(service);
         }
     }
 }
