@@ -1,6 +1,8 @@
-﻿namespace Ticking
+﻿using Dependencies;
+
+namespace Ticking
 {
-    public class TickingManager
+    public class TickingManager : Service
     {
     }
 }

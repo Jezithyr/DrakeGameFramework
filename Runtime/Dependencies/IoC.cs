@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Reflection;
 using Helpers;
 
@@ -8,14 +7,14 @@ namespace Dependencies
 {
     public static class IoC
     {
-        private static readonly ConcurrentDictionary<Type, object> Services = new();
+        private static readonly ConcurrentDictionary<Type, Service> Services = new();
 
-        public static void Add<T>() where T : new()
+        public static void Add<T>() where T : Service, new()
         {
             Add(new T());
         }
 
-        public static void Add(object service)
+        public static void Add(Service service)
         {
             var type = service.GetType();
             if (!Services.TryAdd(type, service))
@@ -24,20 +23,28 @@ namespace Dependencies
             }
         }
 
+        public static void Add(Assembly assembly)
+        {
+            foreach (var type in assembly.GetTypes())
+            {
+                if (!typeof(Service).IsAssignableFrom(type))
+                {
+                    continue;
+                }
+
+                var service = (Service) Activator.CreateInstance(type);
+                Add(service);
+            }
+        }
+
         public static void Initialize()
         {
-            var postInject = new List<IPostInject>();
-            foreach (var (type, service) in Services)
+            foreach (var service in Services.Values)
             {
                 Inject(service);
-
-                if (typeof(IPostInject).IsAssignableFrom(type))
-                {
-                    postInject.Add((IPostInject) service);
-                }
             }
 
-            foreach (var service in postInject)
+            foreach (var service in Services.Values)
             {
                 service.Initialize();
             }
@@ -74,7 +81,7 @@ namespace Dependencies
             return obj;
         }
 
-        public static T? Get<T>()
+        public static T? Get<T>() where T : Service
         {
             return (T?) Get(typeof(T));
         }
