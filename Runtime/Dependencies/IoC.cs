@@ -27,7 +27,7 @@ namespace Dependencies
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (!typeof(Service).IsAssignableFrom(type))
+                if (!typeof(Service).IsAssignableFrom(type) || type.IsAbstract)
                 {
                     continue;
                 }
