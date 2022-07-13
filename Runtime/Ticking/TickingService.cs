@@ -1,5 +1,6 @@
 ﻿using System;
 using Dependencies;
+using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 
@@ -37,7 +38,15 @@ namespace Ticking
         {
         }
 
-        private static bool InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
+        private static void InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
+        {
+            if (!InsertBeforeRecursive<T>(ref system, ref toInsert))
+            {
+                Debug.LogError($"Could not insert system {toInsert} before {nameof(T)} in system {system}");
+            }
+        }
+
+        private static bool InsertBeforeRecursive<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
         {
             ref var systems = ref system.subSystemList;
             if (systems == null)
@@ -53,7 +62,7 @@ namespace Ticking
                 if (sub.type != type)
                 {
                     if (systems.Length > i &&
-                        InsertBefore<T>(ref sub, ref toInsert))
+                        InsertBeforeRecursive<T>(ref sub, ref toInsert))
                     {
                         return true;
                     }
