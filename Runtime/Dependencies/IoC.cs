@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Helpers;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using Debug = UnityEngine.Debug;
 
 namespace Dependencies
 {
     public static class IoC
     {
+        public const string ServicesPath = "Assets/DGF/Services";
         private static readonly ConcurrentDictionary<Type, IService> Services = new();
         public static event Action<IService>? ServiceAdded;
 
@@ -93,14 +99,36 @@ namespace Dependencies
             return obj;
         }
 
-        public static T? Get<T>() where T : IService
+        public static T Get<T>() where T : IService
         {
-            return (T?) Get(typeof(T));
+            return (T) Get(typeof(T));
         }
 
-        public static object? Get(Type type)
+        public static object Get(Type type)
         {
             return Services[type];
+        }
+
+        public static async Task RegisterAllInitialize()
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            await RegisterScriptableServices();
+            Add(typeof(IoC).Assembly);
+            Initialize();
+
+            Debug.Log($"Ran {nameof(RegisterAllInitialize)} in {stopwatch.Elapsed.TotalSeconds:F4} seconds");
+        }
+
+        public static async Task RegisterScriptableServices()
+        {
+            var assets = Directory.GetFiles(ServicesPath, "*.asset");
+            foreach (var asset in assets)
+            {
+                var path = asset.Replace('\\', '/');
+                var service = await Addressables.LoadAssetAsync<ScriptableService>(path).Task;
+                Add(service);
+            }
         }
 
         public static void Shutdown()
