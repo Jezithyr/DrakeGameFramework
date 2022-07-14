@@ -37,6 +37,7 @@ namespace Editor
                     var assetPath = $"{ServicesPath}/{fileName}";
                     if (File.Exists(assetPath))
                     {
+                        EditorAddressableHelpers.SetAddressable(assetPath);
                         continue;
                     }
 
