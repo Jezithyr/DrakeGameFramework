@@ -70,20 +70,13 @@ namespace Ticking
             }
         }
 
-        private static void InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
+        private static ref PlayerLoopSystem[]? FindSystem<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert, out int index) where T : struct
         {
-            if (!InsertBeforeRecursive<T>(ref system, ref toInsert))
-            {
-                Debug.LogError($"Could not insert system {toInsert} before {nameof(T)} in system {system}");
-            }
-        }
-
-        private static bool InsertBeforeRecursive<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
-        {
+            index = 0;
             ref var systems = ref system.subSystemList;
             if (systems == null)
             {
-                return false;
+                return ref systems;
             }
 
             var type = typeof(T);
@@ -93,23 +86,52 @@ namespace Ticking
                 ref var sub = ref systems[i];
                 if (sub.type != type)
                 {
-                    if (systems.Length > i &&
-                        InsertBeforeRecursive<T>(ref sub, ref toInsert))
+                    if (systems.Length > i)
                     {
-                        return true;
+                        ref var systemsFound = ref FindSystem<T>(ref sub, ref toInsert, out index);
+                        if (systemsFound != null)
+                        {
+                            return ref systemsFound;
+                        }
                     }
 
                     continue;
                 }
 
-                Array.Resize(ref systems, systems.Length + 1);
-                Array.Copy(systems, i, systems, i + 1, systems.Length - 1 - i);
-                systems[i] = toInsert;
-
-                return true;
+                index = i;
+                return ref systems;
             }
 
-            return false;
+            systems = null;
+            return ref systems;
+        }
+
+        private static void InsertAfter<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
+        {
+            ref var systems = ref FindSystem<T>(ref system, ref toInsert, out var i);
+            if (systems == null)
+            {
+                Debug.LogError($"Could not insert system {toInsert} after {nameof(T)} in system {system}");
+                return;
+            }
+
+            Array.Resize(ref systems, systems.Length + 1);
+            Array.Copy(systems, i + 1, systems, i + 2, systems.Length - 2 - i);
+            systems[i + 1] = toInsert;
+        }
+
+        private static void InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
+        {
+            ref var systems = ref FindSystem<T>(ref system, ref toInsert, out var i);
+            if (systems == null)
+            {
+                Debug.LogError($"Could not insert system {toInsert} before {nameof(T)} in system {system}");
+                return;
+            }
+
+            Array.Resize(ref systems, systems.Length + 1);
+            Array.Copy(systems, i, systems, i + 1, systems.Length - 1 - i);
+            systems[i] = toInsert;
         }
     }
 }
