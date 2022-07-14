@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using Dependencies;
 using Editor.Helpers;
 using Reflection;
@@ -20,23 +19,21 @@ namespace Editor
             Initialize();
         }
 
-        private static async void Initialize()
+        private static void Initialize()
         {
             var stopwatch = Stopwatch.StartNew();
-            await UpdateServiceAssets();
+            UpdateServiceAssets();
             UpdateSessionAssets();
 
             Debug.Log($"Ran {nameof(EditorBootstrap)} in {stopwatch.Elapsed.TotalSeconds:F4} seconds");
         }
 
-        private static async Task UpdateServiceAssets()
+        private static void UpdateServiceAssets()
         {
-            await IoC.RegisterAllInitialize();
             EditorAddressableHelpers.CreateAllFolders(IoC.ServicesAssetPath);
 
             var assetFileNames = new HashSet<string>();
-            var reflection = IoC.Get<ReflectionService>();
-            foreach (var type in reflection.GetDerivedTypes<ScriptableService>())
+            foreach (var type in ReflectionService.GetAllDerivedTypes<ScriptableService>())
             {
                 if (type.IsAbstract)
                 {
@@ -72,8 +69,7 @@ namespace Editor
             EditorAddressableHelpers.CreateAllFolders(SessionService.SessionAssetPath);
 
             var assetFileNames = new HashSet<string>();
-            var reflection = IoC.Get<ReflectionService>();
-            foreach (var type in reflection.GetDerivedTypes<Session>())
+            foreach (var type in ReflectionService.GetAllDerivedTypes<Session>())
             {
                 if (type.IsAbstract || type == typeof(DefaultSession))
                 {
@@ -102,8 +98,6 @@ namespace Editor
                     AssetDatabase.DeleteAsset(file);
                 }
             }
-            
         }
-
     }
 }
