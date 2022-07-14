@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dependencies;
+using Sessions;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 
 namespace Ticking
 {
-    public class TickingService : ScriptableService
+    public class TickingService : IService
     {
+        public bool TickEnabled = true;
         private delegate void OnUpdateCallback();
 
         private readonly SortedList<string, IService> services = new();
@@ -24,7 +26,7 @@ namespace Ticking
             }
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
             original = PlayerLoop.GetCurrentPlayerLoop();
             var loop = PlayerLoop.GetCurrentPlayerLoop();
@@ -46,7 +48,7 @@ namespace Ticking
             PlayerLoop.SetPlayerLoop(loop);
         }
 
-        public override void Shutdown()
+        public void Shutdown()
         {
             if (!original.Equals(default(PlayerLoopSystem)))
             {
@@ -54,8 +56,16 @@ namespace Ticking
             }
         }
 
+
+        public void FixedUpdate()
+        { }
+
+        public void Update()
+        { }
+
         private void FixedUpdateLoop()
         {
+            if (!TickEnabled) return;
             foreach (var service in services.Values)
             {
                 service.FixedUpdate();
@@ -64,6 +74,7 @@ namespace Ticking
 
         private void UpdateLoop()
         {
+            if (!TickEnabled) return;
             foreach (var service in services.Values)
             {
                 service.Update();
