@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dependencies;
-using Sessions;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
@@ -10,11 +9,13 @@ namespace Ticking
 {
     public class TickingService : IService
     {
-        public bool TickEnabled = true;
-        private delegate void OnUpdateCallback();
+        private delegate void RunFixedUpdate();
+        private delegate void RunUpdate();
 
         private readonly SortedList<string, IService> services = new();
         private PlayerLoopSystem original;
+
+        public bool TickEnabled = true;
 
         public TickingService()
         {
@@ -34,12 +35,12 @@ namespace Ticking
             var fixedUpdate = new PlayerLoopSystem
             {
                 updateDelegate = FixedUpdateLoop,
-                type = typeof(OnUpdateCallback)
+                type = typeof(RunFixedUpdate)
             };
             var update = new PlayerLoopSystem
             {
                 updateDelegate = UpdateLoop,
-                type = typeof(OnUpdateCallback)
+                type = typeof(RunUpdate)
             };
 
             InsertBefore<FixedUpdate.ScriptRunBehaviourFixedUpdate>(ref loop, ref fixedUpdate);
