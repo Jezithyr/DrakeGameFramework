@@ -14,7 +14,7 @@ namespace Dependencies
 {
     public static class IoC
     {
-        public const string ServicesPath = "Assets/DGF/Services";
+        public const string ServicesAssetPath = "Assets/DGF/Services";
         private static readonly ConcurrentDictionary<Type, IService> Services = new();
         public static event Action<IService>? ServiceAdded;
 
@@ -122,7 +122,7 @@ namespace Dependencies
 
         public static async Task RegisterScriptableServices()
         {
-            var assets = Directory.GetFiles(ServicesPath, "*.asset");
+            var assets = Directory.GetFiles(ServicesAssetPath, "*.asset");
             foreach (var asset in assets)
             {
                 var path = asset.Replace('\\', '/');

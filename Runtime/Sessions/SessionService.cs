@@ -10,6 +10,9 @@ namespace Sessions
 {
     public class SessionService : ScriptableService
     {
+
+        public static readonly string SessionAssetPath = "Assets/DGF/Sessions";
+        
         private Session activeSession;
         private Dictionary<Type, Session> sessionLookup = new();
         
