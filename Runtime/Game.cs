@@ -21,6 +21,7 @@ public static partial class Game
 
     internal static void Exiting()
     {
+        IoC.Shutdown();
     }
 
     public static void ExitProgram()

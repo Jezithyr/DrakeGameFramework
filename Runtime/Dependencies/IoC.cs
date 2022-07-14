@@ -102,5 +102,13 @@ namespace Dependencies
         {
             return Services[type];
         }
+
+        public static void Shutdown()
+        {
+            foreach (var service in Services.Values)
+            {
+                service.Shutdown();
+            }
+        }
     }
 }

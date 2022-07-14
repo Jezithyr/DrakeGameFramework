@@ -12,6 +12,7 @@ namespace Ticking
         private delegate void OnUpdateCallback();
 
         private readonly SortedList<string, IService> services = new();
+        private PlayerLoopSystem original;
 
         public TickingService()
         {
@@ -25,7 +26,9 @@ namespace Ticking
 
         public override void Initialize()
         {
+            original = PlayerLoop.GetCurrentPlayerLoop();
             var loop = PlayerLoop.GetCurrentPlayerLoop();
+
             var fixedUpdate = new PlayerLoopSystem
             {
                 updateDelegate = FixedUpdateLoop,
@@ -41,6 +44,14 @@ namespace Ticking
             InsertBefore<Update.ScriptRunBehaviourUpdate>(ref loop, ref update);
 
             PlayerLoop.SetPlayerLoop(loop);
+        }
+
+        public override void Shutdown()
+        {
+            if (!original.Equals(default(PlayerLoopSystem)))
+            {
+                PlayerLoop.SetPlayerLoop(original);
+            }
         }
 
         private void FixedUpdateLoop()
