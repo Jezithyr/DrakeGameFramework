@@ -57,13 +57,6 @@ namespace Ticking
             }
         }
 
-
-        public void FixedUpdate()
-        { }
-
-        public void Update()
-        { }
-
         private void FixedUpdateLoop()
         {
             if (!TickEnabled) return;
@@ -82,10 +75,10 @@ namespace Ticking
             }
         }
 
-        private static ref PlayerLoopSystem[]? FindSystem<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert, out int index) where T : struct
+        private static ref PlayerLoopSystem[]? FindSystem<T>(ref PlayerLoopSystem system, out int index) where T : struct
         {
             index = 0;
-            ref var systems = ref system.subSystemList;
+            ref PlayerLoopSystem[]? systems = ref system.subSystemList;
             if (systems == null)
             {
                 return ref systems;
@@ -100,7 +93,7 @@ namespace Ticking
                 {
                     if (systems.Length > i)
                     {
-                        ref var systemsFound = ref FindSystem<T>(ref sub, ref toInsert, out index);
+                        ref var systemsFound = ref FindSystem<T>(ref sub, out index);
                         if (systemsFound != null)
                         {
                             return ref systemsFound;
@@ -120,7 +113,7 @@ namespace Ticking
 
         private static void InsertAfter<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
         {
-            ref var systems = ref FindSystem<T>(ref system, ref toInsert, out var i);
+            ref var systems = ref FindSystem<T>(ref system, out var i);
             if (systems == null)
             {
                 Debug.LogError($"Could not insert system {toInsert} after {nameof(T)} in system {system}");
@@ -134,7 +127,7 @@ namespace Ticking
 
         private static void InsertBefore<T>(ref PlayerLoopSystem system, ref PlayerLoopSystem toInsert) where T : struct
         {
-            ref var systems = ref FindSystem<T>(ref system, ref toInsert, out var i);
+            ref var systems = ref FindSystem<T>(ref system, out var i);
             if (systems == null)
             {
                 Debug.LogError($"Could not insert system {toInsert} before {nameof(T)} in system {system}");
