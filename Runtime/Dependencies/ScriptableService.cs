@@ -2,6 +2,7 @@
 
 namespace Dependencies
 {
+    [ResetStateOnExitPlayMode]
     public abstract class ScriptableService : ScriptableObject, IService
     {
         public virtual void Initialize()
