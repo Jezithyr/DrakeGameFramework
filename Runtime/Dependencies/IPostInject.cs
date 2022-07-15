@@ -1,4 +1,4 @@
-﻿namespace Dependencies
+﻿namespace DGF.Dependencies
 {
     public interface IPostInject
     {

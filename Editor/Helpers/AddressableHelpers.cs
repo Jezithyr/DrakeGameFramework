@@ -2,7 +2,7 @@
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
-namespace Editor.Helpers
+namespace DGFEditor.Editor.Helpers
 {
     public static class EditorAddressableHelpers
     {

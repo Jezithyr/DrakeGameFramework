@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Helpers;
+using DGF.Helpers;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Debug = UnityEngine.Debug;
 
-namespace Dependencies
+namespace DGF.Dependencies
 {
     public static class IoC
     {

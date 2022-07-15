@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dependencies
+namespace DGF.Dependencies
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class InjectAttribute : Attribute

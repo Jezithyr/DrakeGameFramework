@@ -3,16 +3,19 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("DrakeGameFrameworkEditor")]
 
-public static class GameBootstrap
+namespace DGF
 {
-    private const string DrakeSettingsFolder = "DGFSettings";
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-    static void Bootstrap()
+    public static class GameBootstrap
     {
-        Debug.Log("Starting DGF");
-        Application.quitting += Game.Exiting;
-        //loading settings:
-        Game.Initialize();
+        private const string DrakeSettingsFolder = "DGFSettings";
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        static void Bootstrap()
+        {
+            Debug.Log("Starting DGF");
+            Application.quitting += Game.Exiting;
+            //loading settings:
+            Game.Initialize();
+        }
     }
 }

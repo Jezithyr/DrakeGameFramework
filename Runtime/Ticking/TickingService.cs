@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dependencies;
+using DGF.Dependencies;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 
-namespace Ticking
+namespace DGF.Ticking
 {
     public class TickingService : IService
     {

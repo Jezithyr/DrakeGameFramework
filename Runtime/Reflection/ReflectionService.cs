@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 
-namespace Reflection
+namespace DGF.Reflection
 {
     public static class ReflectionService
     {

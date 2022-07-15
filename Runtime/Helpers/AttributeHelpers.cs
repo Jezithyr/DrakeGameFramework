@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Helpers
+namespace DGF.Helpers
 {
     public static class AttributeHelpers
     {

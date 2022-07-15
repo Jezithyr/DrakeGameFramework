@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Dependencies
+namespace DGF.Dependencies
 {
     [ResetStateOnExitPlayMode]
     public abstract class ScriptableService : ScriptableObject, IService

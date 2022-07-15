@@ -1,6 +1,6 @@
-﻿using Dependencies;
+﻿using DGF.Dependencies;
 
-namespace UI
+namespace DGF.UI
 {
     public class UIService : ScriptableService
     {

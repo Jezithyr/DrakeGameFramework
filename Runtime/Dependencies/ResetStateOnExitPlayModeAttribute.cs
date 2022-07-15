@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Dependencies
+namespace DGF.Dependencies
 {
     [BaseTypeRequired(typeof(ScriptableObject))]
     [AttributeUsage(AttributeTargets.Class)]

@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Dependencies;
-using Ticking;
+using DGF.Dependencies;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-namespace Sessions
+namespace DGF.Sessions
 {
     public class SessionService : ScriptableService
     {

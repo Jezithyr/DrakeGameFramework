@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Sessions
+namespace DGF.Sessions
 {
     public abstract class Session : ScriptableObject
     {

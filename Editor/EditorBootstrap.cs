@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Dependencies;
-using Editor.Helpers;
-using Helpers;
-using Reflection;
-using Sessions;
+using DGF.Dependencies;
+using DGF.Helpers;
+using DGF.Reflection;
+using DGF.Sessions;
+using DGFEditor.Editor.Helpers;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-namespace Editor
+namespace DGFEditor.Editor
 {
     [InitializeOnLoad]
     public static class EditorBootstrap
