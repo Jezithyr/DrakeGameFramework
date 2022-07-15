@@ -32,17 +32,6 @@ namespace DGF
             Application.Quit();
         }
 
-        private static async Task RegisterScriptableServices()
-        {
-            var assets = Directory.GetFiles("Assets/DGF/Services", "*.asset");
-            foreach (var asset in assets)
-            {
-                var path = asset.Replace('\\', '/');
-                var service = await Addressables.LoadAssetAsync<ScriptableService>(path).Task;
-                IoC.Add(service);
-            }
-        }
-
         private static async Task RegisterScriptableSessions()
         {
             var assets = Directory.GetFiles("Assets/DGF/Sessions", "*.asset");
