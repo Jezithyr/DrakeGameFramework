@@ -9,11 +9,11 @@
   "changelogUrl": "",
   "licensesUrl": "",
   "dependencies": {
-	"com.unity.addressables": "1.16.19",
-	"com.unity.scriptablebuildpipeline": "1.16.1"
- },
- "keywords": [
-  ],
+    "com.unity.addressables": "1.16.19",
+    "com.unity.scriptablebuildpipeline": "1.16.1",
+	"com.dbrizov.naughtyattributes": "2.1.4"
+  },
+  "keywords": [],
   "author": {
     "name": "Jesse 'Jezithyr' Rougeau",
     "email": "Jezithyr@gmail.com",
